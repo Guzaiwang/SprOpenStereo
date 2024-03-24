@@ -1,9 +1,9 @@
 data_cfg:
-  name: Middlebury
-  root: /DATA/i2r/guzw/dataset/data/Middlebury
-  train_list: datasets/Middlebury/MiddEval3_train_q.txt
-  val_list: datasets/Middlebury/MiddEval3_train_q.txt
-  test_list: datasets/Middlebury/MiddEval3_train_q.txt
+  name: SceneFlow
+  root: /DATA/i2r/guzw/dataset/data/SceneFlow
+  train_list: datasets/SceneFlow/sceneflow_cleanpass_train.txt
+  val_list: datasets/SceneFlow/sceneflow_cleanpass_test.txt
+  test_list: datasets/SceneFlow/sceneflow_cleanpass_test.txt
   num_workers: 8
   train_batch_size: 4
   val_batch_size: 1
@@ -33,8 +33,7 @@ data_cfg:
         std: [ 0.229, 0.224, 0.225 ]
     val:
       - type: StereoPad
-        # size: [ 1024, 1504 ] # h
-        size: [ 512, 752] # q
+        size: [ 544, 960 ]
       - type: GetValidDisp
         max_disp: 192
       - type: TransposeImage
@@ -71,10 +70,9 @@ loss_cfg:
 
 
 trainer_cfg:
-  save_name: PSMNet_MB
+  save_name: PSMNet_SceneFlow
   total_epoch: 15
-  # restore_hint: /DATA/i2r/guzw/workspace/SprOpenStereo/ckpts/PSMNet_Sceneflow.pt
-  restore_hint: /DATA/i2r/guzw/workspace/SprOpenStereo/output/SceneFlow/PSMNet/PSMNet_SceneFlow/checkpoints/PSMNet_SceneFlow_epoch_014.pt
+  restore_hint: 0
   log_iter: 50 # iter
   save_every: 1 # epoch
   val_every: 1 # epoch

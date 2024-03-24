@@ -9,3 +9,4 @@ from .msnet import MSNet
 from .psmnet import PSMNet
 from .sttr import STTRNet
 from .igev import IGEV
+from .igev_agg import IGEV_agg

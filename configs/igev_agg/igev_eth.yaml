@@ -1,15 +1,15 @@
 data_cfg:
-  name: SceneFlow
-  root: /DATA/i2r/guzw/dataset/data/SceneFlow  # your datapath of SceneFlow
-  train_list: datasets/SceneFlow/sceneflow_finalpass_train.txt
-  val_list: datasets/SceneFlow/sceneflow_finalpass_test.txt
-  test_list: datasets/SceneFlow/sceneflow_finalpass_test.txt
+  name: ETH3D
+  root: data/ETH3D
+  train_list: datasets/ETH3D/ETH3D_train.txt
+  val_list: datasets/ETH3D/ETH3D_train.txt
+  test_list: datasets/ETH3D/ETH3D_train.txt
   num_workers: 4
-  train_batch_size: 4
-  val_batch_size: 10
+  train_batch_size: 2
+  val_batch_size: 1
   pin_memory: true
-  shuffle: true
-  return_right_disp: true
+  shuffle: false
+
   batch_uniform: false
 
   transform:
@@ -23,8 +23,9 @@ data_cfg:
         v_flip_prob: 0.1
 
     val:
-      - type: StereoPad
-        size: [ 544, 960 ]
+      - type: DivisiblePad
+        by: 32
+        mode: double
       - type: GetValidDisp
         max_disp: 192
       - type: TransposeImage
@@ -43,17 +44,17 @@ model_cfg:
     corr_levels: 2
     corr_radius: 4
     train_iters: 22
-    valid_iters: 22
+    valid_iters: 32
 
 loss_cfg:
 # This model uses the user-defined loss function.
 
 trainer_cfg:
-  save_name: igev_eval
+  save_name: igev_sf
   total_epoch: 100 # remember to give a large number here if using max_iter to control the training process
-  max_iter: &TotalIter 100100
-  restore_hint: /DATA/i2r/guzw/workspace/SprOpenStereo/ckpts/IGEV_Sceneflow_epoch_090.pt
-  log_iter: 10 # iter
+  max_iter: 200100
+  restore_hint: 0
+  log_iter: 1 # iter
   save_every: 1 # epoch
   val_every: 1 # epoch
   amp: true
@@ -63,14 +64,14 @@ trainer_cfg:
 
   optimizer_cfg:
     solver: AdamW
-    lr: &maxlr 0.0002
+    lr: 0.0002
     weight_decay: 0.00001
     eps: 0.00000001
 
   scheduler_cfg:
     scheduler: OneCycleLR
-    max_lr: *maxlr
-    total_steps: *TotalIter
+    max_lr: 0.0002
+    total_steps: 200100
     pct_start: 0.01
     cycle_momentum: False
     anneal_strategy: linear
@@ -79,7 +80,8 @@ trainer_cfg:
   #      warmup_steps: 2000
 
   evaluator_cfg:
-    metrics:
+    apply_occ_mask: true
+    metric:
       - d1_all
       - epe
       - bad_1

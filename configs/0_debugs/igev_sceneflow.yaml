@@ -49,10 +49,10 @@ loss_cfg:
 # This model uses the user-defined loss function.
 
 trainer_cfg:
-  save_name: igev_eval
+  save_name: igev_sf
   total_epoch: 100 # remember to give a large number here if using max_iter to control the training process
   max_iter: &TotalIter 100100
-  restore_hint: /DATA/i2r/guzw/workspace/SprOpenStereo/ckpts/IGEV_Sceneflow_epoch_090.pt
+  restore_hint: 0
   log_iter: 10 # iter
   save_every: 1 # epoch
   val_every: 1 # epoch

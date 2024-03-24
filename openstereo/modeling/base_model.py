@@ -179,6 +179,8 @@ class BaseModel(MetaModel, nn.Module):
             for k in ['pad', 'name']:
                 if k in inputs.keys():
                     processed_inputs[k] = inputs[k]
+        if 'aug_reg' in inputs.keys():
+            processed_inputs['aug_reg'] = torch.from_numpy(inputs['aug_reg'])
         if device is not None:
             # move data to device
             for k, v in processed_inputs.items():

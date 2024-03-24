@@ -11,6 +11,7 @@ from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm
 
 from data.stereo_dataset_batch import StereoBatchDataset
+from data.stereo_agg_dataset_batch import StereoBatchAggDataset
 from evaluation.evaluator import OpenStereoEvaluator
 from modeling.common import ClipGrad, fix_bn
 from utils import NoOp, get_attr_from, get_valid_args, mkdir
@@ -86,7 +87,11 @@ class BaseTrainer:
         self.val_loader = self.get_data_loader(self.data_cfg, 'val')
 
     def get_data_loader(self, data_cfg, scope):
-        dataset = StereoBatchDataset(data_cfg, scope)
+        if 'aug_reg_type' in data_cfg:
+            dataset = StereoBatchAggDataset(data_cfg, scope)
+            print("use StereoBatchAggDataset")
+        else:
+            dataset = StereoBatchDataset(data_cfg, scope)
         batch_size = data_cfg.get(f'{scope}_batch_size', 1)
         num_workers = data_cfg.get('num_workers', 4)
         pin_memory = data_cfg.get('pin_memory', False)

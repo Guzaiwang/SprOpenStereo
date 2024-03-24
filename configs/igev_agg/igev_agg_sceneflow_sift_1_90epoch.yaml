@@ -11,6 +11,7 @@ data_cfg:
   shuffle: true
   return_right_disp: true
   batch_uniform: false
+  aug_reg_type: sift
 
   transform:
     train:
@@ -31,7 +32,7 @@ data_cfg:
       - type: ToTensor
 
 model_cfg:
-  model: IGEV
+  model: IGEV_agg
   find_unused_parameters: true
 
   base_config:
@@ -49,10 +50,10 @@ loss_cfg:
 # This model uses the user-defined loss function.
 
 trainer_cfg:
-  save_name: igev_eval
-  total_epoch: 100 # remember to give a large number here if using max_iter to control the training process
-  max_iter: &TotalIter 100100
-  restore_hint: /DATA/i2r/guzw/workspace/SprOpenStereo/ckpts/IGEV_Sceneflow_epoch_090.pt
+  save_name: igev_agg_90epoch
+  total_epoch: 200 # remember to give a large number here if using max_iter to control the training process
+  max_iter: &TotalIter 200100
+  restore_hint: 0
   log_iter: 10 # iter
   save_every: 1 # epoch
   val_every: 1 # epoch
